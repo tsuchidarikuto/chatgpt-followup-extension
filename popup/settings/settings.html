@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>設定</title>
+    <link rel="stylesheet" href="settings.css">
+</head>
+<body>
+    <div class="container">
+        <h1>設定</h1>
+        <div class="input-group">
+            <label for="api-key">OpenAI API Key</label>
+            <input type="password" id="api-key" placeholder="sk-..." autocomplete="off">
+            <p id="api-key-error" class="error-message"></p>
+        </div>
+        <div class="input-group">
+            <label for="google-api-key">Google API Key</label>
+            <input type="password" id="google-api-key" placeholder="YOUR_GOOGLE_API_KEY" autocomplete="off">
+            <p id="google-api-key-error" class="error-message"></p>
+        </div>
+        <div class="input-group">
+            <label for="google-cse-id">Google CSE ID</label>
+            <input type="text" id="google-cse-id" placeholder="YOUR_GOOGLE_CSE_ID" autocomplete="off">
+            <p id="google-cse-id-error" class="error-message"></p>
+        </div>
+        <button id="save-api-key">保存</button>
+        <a href="../popup.html">back</a>
+        <p id="status-message"></p>
+    </div>
+    <script src="settings.js"></script>
+</body>
+</html>

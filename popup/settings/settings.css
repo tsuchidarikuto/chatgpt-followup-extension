@@ -1,0 +1,75 @@
+body {
+    font-family: sans-serif;
+    width: 300px;
+    margin: 20px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group {
+    margin-bottom: 10px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="password"],
+input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: border-color 0.3s, box-shadow 0.3s; /* Add transition for smooth effect */
+}
+
+input:hover,
+input:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); /* Green shadow on hover/focus */
+    outline: none; /* Remove default focus outline */
+}
+
+button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s; /* Add transition */
+}
+
+button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+button:active {
+    background-color: #3e8e41; /* Even darker green on click */
+    transform: translateY(1px); /* Slight downwards shift on click */
+}
+
+
+#status-message {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.success {
+    color: green;
+}
+
+.error, .error-message {
+    color: red;
+    margin-top: 5px; /* Add margin for better spacing */
+}
