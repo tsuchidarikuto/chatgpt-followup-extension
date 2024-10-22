@@ -1,13 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const geminiApiKeyInput = document.getElementById('gemini-api-key');
+    const apiKeyInput = document.getElementById('api-key');
     const googleApiKeyInput = document.getElementById('google-api-key');
     const googleCseIdInput = document.getElementById('google-cse-id');
     const saveButton = document.getElementById('save-api-key');
     const statusMessage = document.getElementById('status-message');
 
-    const geminiApiKeyError = document.getElementById('gemini-api-key-error');
+    const apiKeyError = document.getElementById('api-key-error');
     const googleApiKeyError = document.getElementById('google-api-key-error');
     const googleCseIdError = document.getElementById('google-cse-id-error');
+
     function updateStatus(saved) {
         if (saved) {
             statusMessage.textContent = 'すべてのAPIキーが保存されました';
@@ -23,9 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
         googleCseIdError.textContent = '';
     }
 
-    chrome.storage.sync.get(['geminiApiKey', 'googleApiKey', 'googleCseId'], (result) => {
-        if (result.geminiApiKey) {
-            geminiApiKeyInput.value = result.geminiApiKey;
+
+    chrome.storage.sync.get(['openaiApiKey', 'googleApiKey', 'googleCseId'], (result) => {
+        if (result.openaiApiKey) {
+            apiKeyInput.value = result.openaiApiKey;
         }
         if (result.googleApiKey) {
             googleApiKeyInput.value = result.googleApiKey;
@@ -33,33 +35,51 @@ document.addEventListener('DOMContentLoaded', () => {
         if (result.googleCseId) {
             googleCseIdInput.value = result.googleCseId;
         }
-        updateStatus(result.geminiApiKey && result.googleApiKey && result.googleCseId);
+
+        // どれか一つでもキーが保存されていれば「更新」ボタンとメッセージを表示
+        if (result.openaiApiKey && result.googleApiKey && result.googleCseId) {
+            updateStatus(true);
+        } else {
+            updateStatus(false);
+        }
     });
 
     saveButton.addEventListener('click', () => {
-        const geminiApiKey = geminiApiKeyInput.value.trim();
+        const apiKey = apiKeyInput.value.trim();
         const googleApiKey = googleApiKeyInput.value.trim();
         const googleCseId = googleCseIdInput.value.trim();
 
-
         let isValid = true;
-        if (!geminiApiKey) {
-            geminiApiKeyError.textContent = 'Gemini API Keyを入力してください';
+        let isAllFilled = true;
+
+        if (!apiKey) {
+            apiKeyError.textContent = 'OpenAI API Keyを入力してください';
             isValid = false;
+            isAllFilled = false;
         }
 
+        if (!googleApiKey) {
+            googleApiKeyError.textContent = 'Google API Keyを入力してください';
+            isValid = false;
+            isAllFilled = false;
+        }
+
+        if (!googleCseId) {
+            googleCseIdError.textContent = 'Google CSE IDを入力してください';
+            isValid = false;
+            isAllFilled = false;
+        }
 
         if (!isValid) {
             return;
         }
 
-
         chrome.storage.sync.set({
-            geminiApiKey: geminiApiKey,
+            openaiApiKey: apiKey,
             googleApiKey: googleApiKey,
             googleCseId: googleCseId
         }, () => {
-            updateStatus(true);
+            updateStatus(isAllFilled);
         });
     });
 });

@@ -23,52 +23,46 @@ let conversationHistory = [];
 
 // Google検索を実行する関数
 async function searchGoogle(query) {
-    const apiKey = await getGoogleApiKey(); // Google API Keyを取得
-    const cseId = await getCseId(); // Google CSE IDを取得
-    const apiUrl = `https://www.googleapis.com/customsearch/v1?key=${apiKey}&cx=${cseId}&q=${encodeURIComponent(query)}`;
-
+    const apiKey = await getGoogleApiKey();
+    const cseId = await getCseId();
+    
+    // 技術系サイト、ニュースサイトの指定
+    const techSites = 'site:zenn.dev OR site:qiita.com OR site:dev.to OR site:github.com OR site:stackoverflow.com OR site:techcrunch.com';
+    const newsSites = 'OR site:publickey1.jp OR site:forest.watch.impress.co.jp';
+    const majorNewsSites = 'OR site:news.google.com OR site:news.yahoo.co.jp';
+    
+    const apiUrl = `https://www.googleapis.com/customsearch/v1?key=${apiKey}&cx=${cseId}&q=${encodeURIComponent(query)}`
+        + `+(${techSites} ${newsSites} ${majorNewsSites})`
+        + '&num=3'
+        + '&sort=date'
+        + '&dateRestrict=m3'
+        + '&fields=items(snippet)';
+ 
     const response = await fetch(apiUrl);
     if (!response.ok) {
-        throw new Error('Google検索に失敗しました');
+        throw new Error('検索に失敗しました');
     }
-
+ 
     const data = await response.json();
-    let searchResults = "";
-    if (data.items && data.items.length > 0) {
-        for (let i = 0; i < Math.min(3, data.items.length); i++) {
-            searchResults += `${i + 1}. ${data.items[i].title}\n${data.items[i].snippet}\n${data.items[i].link}\n\n`;
-        }
-    } else {
-        searchResults = "関連する検索結果が見つかりませんでした。";
-    }
-    console.log("検索結果:",searchResults);
-    return searchResults;
-}
-
+    return data.items
+        ? data.items.map(item => item.snippet).join('\n\n')
+        : "関連する最新の情報は見つかりませんでした。";
+ }
 
 // OpenAI APIを使って検索クエリを生成する関数
 async function generateSearchQuery(userMessage) {
     const apiKey = await getApiKey(); // OpenAIのAPIキーを取得
     const prompt = `
-  次のユーザーメッセージからGoogle検索に適したクエリを生成してください:
-
-  ## 例:
-
-  ユーザーメッセージ: "ChatGPTのプラグインの使い方について教えてください"
-  検索クエリ: "ChatGPT プラグイン 使い方"
-
-  ユーザーメッセージ: "最新のAI論文を調べたい"
-  検索クエリ: "AI 論文 最新"
-
-  ユーザーメッセージ: "美味しいパスタのレシピを知りたい"
-  検索クエリ: "パスタ レシピ 人気"
-
-  ## ユーザーメッセージ:
-
-  ${userMessage}
-
-  ## 検索クエリ:
-  `; // ここにモデルが生成したクエリが入る
+        あなたは検索クエリのスペシャリストです。以下の例を参考に、ユーザーの質問から最適な検索キーワードのみを抽出してください。余計な説明は不要です。
+        入力: "新宿でデートにおすすめのイタリアンを探しています"
+        出力: 新宿 イタリアン デート おすすめ
+        入力: "中古のMacBook Airの相場を知りたい"
+        出力: MacBook Air 中古 相場 価格
+        入力: "初心者向けのヨガ教室を探しています"
+        出力: ヨガ 教室 初心者 入門
+        入力: "${userMessage}"
+        出力:
+        `; // ここにモデルが生成したクエリが入る
 
     const response = await fetch(CHATGPT_API_ENDPOINT, {
       method: 'POST',
