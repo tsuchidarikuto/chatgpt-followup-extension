@@ -189,8 +189,8 @@ chrome.commands.onCommand.addListener((command) => {
         chrome.windows.getCurrent((currentWindow) => {
             const screenWidth = currentWindow.width;
             const screenHeight = currentWindow.height;
-            const popupWidth = 400;
-            const popupHeight = 400;
+            const popupWidth = 370;
+            const popupHeight = 550;
             const left = screenWidth - popupWidth;
             const top = 0;
 
