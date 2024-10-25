@@ -23,16 +23,17 @@
             <div id="response-from-api" class="message assistant"></div>
         </div>
         <div class="chat-input">
-            <!-- display: flex を追加 -->
             <textarea id="followup-question" placeholder="メッセージを入力"></textarea>
-            <button id="submit-button" class="icon-button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="22" y1="2" x2="11" y2="13"></line>
-                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                </svg>
-            </button>
+            <div class="submit-container">
+                <button id="submit-button" class="icon-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+                <div id="char-count">0/500</div>
+            </div>
         </div>
-        <div id="char-count">0/500</div>
     </div>
     <a href="settings/settings.html" id="settings-link" class="settings-link">設定</a>
     <script src="popup.js"></script>

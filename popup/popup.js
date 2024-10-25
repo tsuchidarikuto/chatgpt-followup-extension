@@ -6,6 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const sendButton = document.getElementById('submit-button');
   const updateButton = document.getElementById('update-button');
 
+  // 送信中かどうかを管理するフラグ
+  let isSending = false;
+
   setupMessageListener();
   setupInputListeners();
   setupUpdateButtonListener();
@@ -55,7 +58,27 @@ document.addEventListener('DOMContentLoaded', () => {
       }
   }
 
+  function setLoadingState(isLoading) {
+      isSending = isLoading;
+      followupInput.disabled = isLoading;
+      sendButton.disabled = isLoading;
+      
+      // ビジュアル的なフィードバック
+      if (isLoading) {
+          sendButton.style.opacity = '0.5';
+          followupInput.style.opacity = '0.7';
+          followupInput.placeholder = '応答を待っています...';
+      } else {
+          sendButton.style.opacity = '1';
+          followupInput.style.opacity = '1';
+          followupInput.placeholder = 'メッセージを入力';
+      }
+  }
+
   function sendFollowupQuestion() {
+      // 送信中は新しいメッセージを送信できないようにする
+      if (isSending) return;
+
       const question = followupInput.value.trim();
       if (question.length === 0) {
           displayResponseFromAPI('質問を入力してください');
@@ -63,6 +86,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       const safeQuestion = escapeHtml(question);
+      
+      // 送信中の状態を設定
+      setLoadingState(true);
       
       // ユーザーのメッセージを表示
       displayUserMessage(safeQuestion);
@@ -76,6 +102,8 @@ document.addEventListener('DOMContentLoaded', () => {
                   alert('エラーが発生しました: ' + response.error);
                   console.error('APIエラー', response.error);
               }
+              // 送信完了後、入力を再び有効化
+              setLoadingState(false);
           }
       );
 

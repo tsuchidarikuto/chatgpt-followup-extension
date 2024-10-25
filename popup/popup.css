@@ -21,13 +21,13 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 12px; /* パディングを少し縮小 */
+    padding: 8px 12px;
     background-color: #f7f7f8;
     border-bottom: 1px solid #e5e5e5;
 }
 
 .chat-header h1 {
-    font-size: 16px; /* サイズを少し小さく */
+    font-size: 16px;
     margin: 0;
     font-weight: 600;
 }
@@ -73,19 +73,19 @@ body {
     font-size: 13px;
     line-height: 1.4;
     color: #374151;
-    max-height: 36px; /* 2行分の高さ */
+    max-height: 36px;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
-    display: -webkit-box; /* for older webkit browsers */
-    display: -moz-box;    /* for older firefox */    
-    display: box;         /* standard, modern browsers and future proof */
-    line-clamp: 2; /* standard property; add support where it exists */
-    box-orient: vertical; /* standard property */
-    -webkit-box-orient: vertical; /* for older webkit browsers */
-    -moz-box-orient: vertical;    /* for older firefox */
+    display: -webkit-box;
+    display: -moz-box;
+    display: box;
+    line-clamp: 2;
+    box-orient: vertical;
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
     white-space: nowrap;
 }
 
@@ -105,8 +105,8 @@ body {
 }
 
 .message.user {
-    background-color: #e3e3e3; 
-    color: brack;
+    background-color: #e3e3e3;
+    color: black;
     align-self: flex-end;
 }
 
@@ -115,8 +115,9 @@ body {
     padding: 8px 12px;
     background-color: #ffffff;
     border-top: 1px solid #e5e5e5;
-    display: flex; /* display: flex を追加 */
-    align-items: center; /* 垂直方向の中央揃えを追加 */
+    display: flex;
+    gap: 8px;
+    position: relative;
 }
 
 #followup-question {
@@ -125,16 +126,44 @@ body {
     border-radius: 4px;
     padding: 8px;
     font-size: 14px;
-    margin-right: 8px;
-    flex-grow: 1; /* テキストエリアが余白を埋めるように変更 */
+    flex-grow: 1;
+    resize: none;
+}
+
+/* 送信ボタンと文字カウンターのコンテナ */
+.submit-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 送信ボタンの調整 */
+#submit-button {
+    padding: 4px;
+    margin: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    align-self: flex-start;
+}
+
+#submit-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+#submit-button svg {
+    width: 18px;
+    height: 18px;
+    color: #6e6e80;
 }
 
 /* 文字数カウンターの調整 */
 #char-count {
     font-size: 11px;
     color: #6b7280;
-    padding: 4px 12px;
-    text-align: right;
+    margin-top: 4px;
 }
 
 /* 設定リンクの調整 */
