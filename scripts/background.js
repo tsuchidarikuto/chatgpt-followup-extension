@@ -68,44 +68,48 @@ async function resetChatLog(){
 async function searchGoogle(query) {
     const apiKey = await getGoogleApiKey();
     const cseId = await getCseId();
-    
-    // 技術系サイト、ニュースサイトの指定
-    const techSites = 'site:zenn.dev OR site:qiita.com OR site:dev.to OR site:github.com OR site:stackoverflow.com OR site:techcrunch.com';
-    const newsSites = 'OR site:publickey1.jp OR site:forest.watch.impress.co.jp';
-    const majorNewsSites = 'OR site:news.google.com OR site:news.yahoo.co.jp';
-    
+
+    // 改善後の技術系サイト、ニュースサイトの指定
+    const techSites = 'site:stackoverflow.com OR site:github.com OR site:dev.to OR site:medium.com OR site:hashnode.com';
+    const jpTechSites = 'OR site:qiita.com OR site:zenn.dev OR site:itmedia.co.jp OR site:codezine.jp';
+    const techNewsSites = 'OR site:techcrunch.com OR site:publickey1.jp OR site:watch.impress.co.jp OR site:japan.cnet.com';
+    const generalNewsSites = 'OR site:news.yahoo.co.jp OR site:nhk.or.jp OR site:mainichi.jp OR site:asahi.com OR site:yomiuri.co.jp';
+
+    // 除外キーワード
+    const excludeKeywords = '-レビュー -まとめ';
+
+    // APIのURL
     const apiUrl = `https://www.googleapis.com/customsearch/v1?key=${apiKey}&cx=${cseId}&q=${encodeURIComponent(query)}`
-        + `+(${techSites} ${newsSites} ${majorNewsSites})`
-        + '&num=3'
+        + `+(${techSites} ${jpTechSites} ${techNewsSites} ${generalNewsSites})`
+        + ` ${excludeKeywords}`
+        + '&num=10'
         + '&sort=date'
         + '&dateRestrict=m3'
-        + '&fields=items(snippet)';
- 
+        + '&fields=items(title,snippet)';
+
     const response = await fetch(apiUrl);
     if (!response.ok) {
         throw new Error('検索に失敗しました');
     }
- 
+
     const data = await response.json();
     return data.items
-        ? data.items.map(item => item.snippet).join('\n\n')
+        ? data.items.map(item => `${item.title}\n${item.snippet}`).join('\n\n')
         : "関連する最新の情報は見つかりませんでした。";
- }
+}
 
 // OpenAI APIを使って検索クエリを生成する関数
 async function generateSearchQuery(userMessage) {
     const apiKey = await getApiKey(); // OpenAIのAPIキーを取得
     const prompt = `
-        あなたは検索クエリのスペシャリストです。以下の例を参考に、ユーザーの質問から最適な検索キーワードのみを抽出してください。余計な説明は不要です。
+        You are a search query specialist. Please extract the most suitable search keywords from the user's question, referring to the examples below. No unnecessary explanations are needed.
         入力: "新宿でデートにおすすめのイタリアンを探しています"
         出力: 新宿 イタリアン デート おすすめ
-        入力: "中古のMacBook Airの相場を知りたい"
-        出力: MacBook Air 中古 相場 価格
         入力: "初心者向けのヨガ教室を探しています"
         出力: ヨガ 教室 初心者 入門
         入力: "${userMessage}"
         出力:
-        `; // ここにモデルが生成したクエリが入る
+        `; 
 
     const response = await fetch(CHATGPT_API_ENDPOINT, {
       method: 'POST',
@@ -138,10 +142,10 @@ async function createMessage(conversation, searchResults) {
             const responseFromChatgpt = result.latestResponse || ""; 
 
             // 検索結果をプロンプトに含める
-            let createdPrompt = "あなたはサポートアシスタントです。今、{#web版chatgptの出力}に対し、ユーザから発生した質問をあなたが答えています。{#会話履歴}と{#Web検索結果}を参考に、ユーザの疑問を解消してください。かならず短文で要約して返すこと\n";
-            createdPrompt += "#web版chatgptの出力\n" + responseFromChatgpt + "\n";
-            createdPrompt += "#会話履歴\n" + conversation.map(item => `${item.role}: ${item.content}`).join("\n");
-            createdPrompt += "#Web検索結果\n" + searchResults;
+            let createdPrompt = "あなたはサポートアシスタントです。今、{#web版chatgptの出力}に対し、ユーザから発生した質問をあなたが答えています。{#会話履歴}と{#Web検索結果}を参考に、ユーザの疑問を解消してください。特に{#web検索結果}の取り扱いについては必ず、タイトルの後に添えられる時間に着目し、最新のものを最優先するようにしなさい。基本的に短文で要約して返すこと\n";
+            createdPrompt += "\n#web版chatgptの出力\n" + responseFromChatgpt + "\n";
+            createdPrompt += "\n#会話履歴\n" + conversation.map(item => `${item.role}: ${item.content}`).join("\n");
+            createdPrompt += "\n#Web検索結果\n" + searchResults;
 
             const messages = [
                 { role: 'system', content: createdPrompt },
