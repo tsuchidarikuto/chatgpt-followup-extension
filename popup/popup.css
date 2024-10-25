@@ -93,7 +93,7 @@ body {
 .message {
     margin-bottom: 8px;
     padding: 8px 12px;
-    border-radius: 6px;
+    border-radius: 20px;
     max-width: 85%;
     font-size: 14px;
 }
@@ -105,8 +105,8 @@ body {
 }
 
 .message.user {
-    background-color: #949aa7; /* より現代的な青色 */
-    color: white;
+    background-color: #e3e3e3; 
+    color: brack;
     align-self: flex-end;
 }
 

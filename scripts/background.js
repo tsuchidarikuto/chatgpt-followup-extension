@@ -95,7 +95,7 @@ async function createMessage(conversation, searchResults) {
             const responseFromChatgpt = result.latestResponse || ""; 
 
             // 検索結果をプロンプトに含める
-            let createdPrompt = "あなたはサポートアシスタントです。今、{#web版chatgptの出力}に対し、ユーザから発生した質問をあなたが答えています。{#会話履歴}と{#Web検索結果}を参考に、ユーザの疑問を解消してください。\n";
+            let createdPrompt = "あなたはサポートアシスタントです。今、{#web版chatgptの出力}に対し、ユーザから発生した質問をあなたが答えています。{#会話履歴}と{#Web検索結果}を参考に、ユーザの疑問を解消してください。かならず短文で要約して返すこと\n";
             createdPrompt += "#web版chatgptの出力\n" + responseFromChatgpt + "\n";
             createdPrompt += "#会話履歴\n" + conversation.map(item => `${item.role}: ${item.content}`).join("\n");
             createdPrompt += "#Web検索結果\n" + searchResults;
