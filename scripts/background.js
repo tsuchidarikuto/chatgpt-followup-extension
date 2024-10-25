@@ -2,7 +2,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === 'newResponse') {
         chrome.storage.local.set({ latestResponse: message.response }, () => {
             console.log('最新の応答が保存されました');
-            chrome.runtime.sendMessage({ action: 'displayResponse', response: message.response });
+            returnResponseTopic(message.response);            
         });
     }
     if (message.action === 'sendToChatGPT') { // popup.jsから送られたメッセージを処理
@@ -29,7 +29,35 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 const CHATGPT_API_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
 let conversationHistory = [];
-
+async function returnResponseTopic(topic){
+    const apiKey=await getApiKey();
+    const prompt=`
+    あなたはプロの要約家です。次の#文章から話題を考察し、10文字程度にまとめて出力して
+    #文章
+    ${topic}`
+    const response=await fetch(CHATGPT_API_ENDPOINT,{
+        method:'POST',
+        headers:{
+            'Content-Type':'application/json',
+            'Authorization':`Bearer ${apiKey}`
+        },
+        body:JSON.stringify({
+            model:'gpt-4o-mini-2024-07-18',
+            messages:[{role:'user',content:prompt}],
+            max_tokens:50
+        })
+    });
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`APIリクエストに失敗しました: ${errorData.error.message}`);
+    }
+  
+    const data = await response.json();
+    const generatedSummary = data.choices[0].message.content.trim();
+    console.log("要約",generatedSummary)
+    chrome.runtime.sendMessage({ action: 'displayResponse', response: generatedSummary });
+    return ;
+}
 async function resetChatLog(){
     conversationHistory=[];
     chrome.storage.local.set({latestResponse:""});
