@@ -1,75 +1,149 @@
 body {
-    font-family: sans-serif;
-    width: 300px;
-    margin: 20px;
-}
-
-.container {
+    width: 350px;
+    height: 500px;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    background-color: #ffffff;
     display: flex;
     flex-direction: column;
 }
 
-.input-group {
-    margin-bottom: 10px;
+.settings-container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 30px);
 }
 
-label {
+/* ヘッダーのスタイル調整 */
+.settings-header {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: #f7f7f8;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.settings-header h1 {
+    position: absolute;
+    left: 10px;
+    font-size: 16px;
+    margin: 0;
+    font-weight: 600;
+}
+
+.back-button {
+    padding: 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    display: flex;
+    justify-content: flex-start;
+    text-decoration: none;
+}
+
+.back-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.back-button svg {
+    width: 18px;
+    height: 18px;
+    color: #6e6e80;
+}
+
+/* コンテンツエリアの調整 */
+.settings-content {
+    flex-grow: 1;
+    padding: 12px;
+    overflow-y: auto;
+}
+
+.input-group {
+    margin-bottom: 16px;
+}
+
+.input-group label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: #374151;
+    font-weight: 500;
 }
 
 input[type="password"],
 input[type="text"] {
     width: 100%;
+    height: 36px;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
     padding: 8px;
+    font-size: 14px;
     box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    transition: border-color 0.3s, box-shadow 0.3s; /* Add transition for smooth effect */
 }
 
-input:hover,
+input:hover {
+    border-color: #d1d5db;
+}
+
 input:focus {
-    border-color: #4CAF50;
-    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); /* Green shadow on hover/focus */
-    outline: none; /* Remove default focus outline */
+    outline: none;
+    border-color: #e5e5e5;
+    box-shadow: 0 0 0 2px rgba(229, 229, 229, 0.3);
 }
 
-button {
-    background-color: #4CAF50;
-    border: none;
-    color: white;
-    padding: 10px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s; /* Add transition */
+.error-message {
+    color: #ef4444;
+    font-size: 12px;
+    margin-top: 4px;
+    min-height: 16px;
 }
 
-button:hover {
-    background-color: #45a049; /* Darker green on hover */
+/* フッターの調整 */
+.settings-footer {
+    padding: 12px;
+    background-color: #ffffff;
+    border-top: 1px solid #e5e5e5;
 }
-
-button:active {
-    background-color: #3e8e41; /* Even darker green on click */
-    transform: translateY(1px); /* Slight downwards shift on click */
-}
-
 
 #status-message {
-    margin-top: 10px;
+    font-size: 12px;
+    margin: 0 0 8px 0;
     text-align: center;
+    color: #6b7280;
 }
 
-.success {
-    color: green;
+#status-message.success {
+    color: #10b981;
 }
 
-.error, .error-message {
-    color: red;
-    margin-top: 5px; /* Add margin for better spacing */
+#status-message.error {
+    color: #ef4444;
+}
+
+/* 保存ボタンの調整 */
+#save-api-key {
+    width: 100%;
+    padding: 8px;
+    background-color: #f7f7f8;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    color: #6e6e80;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+#save-api-key:hover {
+    background-color: #e5e5e5;
+}
+
+#save-api-key svg {
+    width: 18px;
+    height: 18px;
 }
