@@ -19,7 +19,7 @@ body {
 /* ヘッダーのスタイル調整 */
 .chat-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     padding: 8px 12px;
     background-color: #f7f7f8;
@@ -27,19 +27,23 @@ body {
 }
 
 .chat-header h1 {
+    position:absolute;
+    left:10px;
     font-size: 16px;
     margin: 0;
     font-weight: 600;
 }
 
-/* 更新アイコンの調整 */
+
 .icon-button {
-    padding: 4px;
+    padding: 8px;
     background: transparent;
     border: none;
     cursor: pointer;
     border-radius: 4px;
     transition: background-color 0.2s;
+    display:flex;
+    justify-content:flex-start;
 }
 
 .icon-button:hover {
@@ -63,17 +67,18 @@ body {
 /* latest-responseの改善 */
 #latest-response-wrapper {
     background-color: #f7f7f8;
-    padding: 8px 12px;
-    margin: 0;
+    padding: 16px 12px;
+    margin: 8px;
     border-bottom: 1px solid #e5e5e5;
     position: relative;
+    border-radius:6px;
 }
 
 #latest-response-from-chatgpt {
     font-size: 13px;
-    line-height: 1.4;
+    line-height: 1;
     color: #374151;
-    max-height: 36px;
+    max-height: 13px;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -86,7 +91,7 @@ body {
     box-orient: vertical;
     -webkit-box-orient: vertical;
     -moz-box-orient: vertical;
-    white-space: nowrap;
+    
 }
 
 /* メッセージスタイルの調整 */

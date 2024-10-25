@@ -15,12 +15,27 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             });
         return true;  // 非同期処理のためtrueを返す
     }
+    if(message.action==='resetChat'){
+        resetChatLog()
+            .then(response=>{
+                sendResponse({success:true,response});
+            })
+            .catch(error=>{
+                sendResponse({success:false,error:error.message});
+            });
+        return true;
+    }
 });
 
 const CHATGPT_API_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
 let conversationHistory = [];
 
+async function resetChatLog(){
+    conversationHistory=[];
+    chrome.storage.local.set({latestResponse:""});
+    console.log("リセットしたよ")
 
+}
 // Google検索を実行する関数
 async function searchGoogle(query) {
     const apiKey = await getGoogleApiKey();
@@ -115,7 +130,7 @@ async function sendToChatGPT(message) {
     const apiKey = await getApiKey();
     if (!apiKey) {
         throw new Error('APIキーが設定されていません');
-        return 'APIキーを入力してください';
+     
     }
 
     conversationHistory.push({ role: 'user', content: message });
