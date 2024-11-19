@@ -29,6 +29,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 const CHATGPT_API_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
 let conversationHistory = [];
+
 async function returnResponseTopic(topic){
     const apiKey=await getApiKey();
     const prompt=`
@@ -102,12 +103,12 @@ async function searchGoogle(query) {
 async function generateSearchQuery(userMessage) {
     const apiKey = await getApiKey(); // OpenAIのAPIキーを取得
     const prompt = `
-        You are a search query specialist. Please extract the most suitable search keywords from the user's question, referring to the examples below. No unnecessary explanations are needed.
+        You are a search query specialist. Please extract the most suitable search keywords from the #conversationHistory, referring to the examples below. No unnecessary explanations are needed.
         入力: "新宿でデートにおすすめのイタリアンを探しています"
         出力: 新宿 イタリアン デート おすすめ
         入力: "初心者向けのヨガ教室を探しています"
         出力: ヨガ 教室 初心者 入門
-        入力: "${userMessage}"
+        入力: "#{conversationhistory${userMessage}*"
         出力:
         `; 
 
@@ -172,7 +173,7 @@ async function sendToChatGPT(message) {
     }
 
     // 検索クエリを生成
-    const searchQuery = await generateSearchQuery(message);
+    const searchQuery = await generateSearchQuery(conversationHistory);
     // 生成されたクエリで検索を実行
     const searchResults = await searchGoogle(searchQuery);
     // 検索結果を含めたプロンプトを作成

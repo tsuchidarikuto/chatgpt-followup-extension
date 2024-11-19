@@ -1,10 +1,13 @@
 {
-    "manifest_version":3,
+    "manifest_version": 3,
     "name":"Support chat",
     "version":"1.0",
     "description":"ChatGPTの応答に対してフォローアップ質問を簡単に行えるChrome拡張機能です。",
     "permissions":[
-        "activeTab","storage","scripting","webNavigation"
+        "activeTab",
+        "storage",
+        "scripting",
+        "webNavigation"
     ],
     "host_permissions":[
         "https://chat.openai.com/*"
