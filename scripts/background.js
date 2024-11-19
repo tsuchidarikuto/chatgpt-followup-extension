@@ -173,7 +173,7 @@ async function sendToChatGPT(message) {
     }
 
     // 検索クエリを生成
-    const searchQuery = await generateSearchQuery(conversationHistory);
+    const searchQuery = await generateSearchQuery(conversationHistory.map(item => item.content).join(' '));
     // 生成されたクエリで検索を実行
     const searchResults = await searchGoogle(searchQuery);
     // 検索結果を含めたプロンプトを作成
