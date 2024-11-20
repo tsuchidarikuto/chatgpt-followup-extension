@@ -111,7 +111,7 @@ async function generateSearchQuery(userMessage) {
         入力: "#{conversationhistory${userMessage}*"
         出力:
         `; 
-
+    console.log(prompt);
     const response = await fetch(CHATGPT_API_ENDPOINT, {
       method: 'POST',
       headers: {
@@ -173,7 +173,7 @@ async function sendToChatGPT(message) {
     }
 
     // 検索クエリを生成
-    const searchQuery = await generateSearchQuery(conversationHistory.map(item => item.content).join(' '));
+    const searchQuery = await generateSearchQuery(conversationHistory.filter(item => item.role !== 'assistant').slice(-3).map(item => item.content).join(' '));
     // 生成されたクエリで検索を実行
     const searchResults = await searchGoogle(searchQuery);
     // 検索結果を含めたプロンプトを作成

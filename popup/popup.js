@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   setupMessageListener();
   setupInputListeners();
+
   setupUpdateButtonListener();
 
   // フォーカスを入力フィールドに設定
@@ -105,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setLoadingState(true);
     
     // ユーザーのメッセージを表示
-    displayUserMessage(safeQuestion);
+    displayUserMessage(question);
 
     chrome.runtime.sendMessage(
         {action: 'sendToChatGPT', question: safeQuestion},
@@ -128,7 +129,9 @@ document.addEventListener('DOMContentLoaded', () => {
   function displayResponseFromAPI(response) {
     const messageDiv = document.createElement('div');
     messageDiv.className = 'message assistant';
-    messageDiv.textContent = response;
+    messageDiv.innerHTML = convertMarkdownToHtml(response);
+    console.log(response)
+    console.log(messageDiv.innerHTML);
     chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
@@ -136,9 +139,15 @@ document.addEventListener('DOMContentLoaded', () => {
   function displayUserMessage(message) {
     const messageDiv = document.createElement('div');
     messageDiv.className = 'message user';
-    messageDiv.textContent = message;
+    messageDiv.innerHTML = convertMarkdownToHtml(message);
+    console.log(message)
+    console.log(messageDiv.innerHTML);
     chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function convertMarkdownToHtml(markdownText){
+    return marked.parse(markdownText);
   }
 });
 
